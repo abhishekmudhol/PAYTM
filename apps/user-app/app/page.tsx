@@ -1,15 +1,12 @@
 "use client"
-import Image from "next/image";
-import { Button } from "@repo/ui/button";
-import styles from "./page.module.css";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { Appbar } from "@repo/ui/appbar";
 
-import { useBalance } from '@repo/store/useBalance';
-
-
-export default function Home() {
+export default function Page(): JSX.Element {
+  const session = useSession();
   return (
-    <div className="text-orange-500">
-      {useBalance()}
-    </div>
-  )
+   <div>
+      <Appbar onSignin={signIn} onSignout={signOut} user={session.data?.user} />
+   </div>
+  );
 }
