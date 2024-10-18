@@ -6,6 +6,8 @@ app.use(express.json())
 
 app.post('/hdfcWebhook' , async (req: Request , res: Response)=>{
     //TODO: Add zod validation here
+    //TODO: check of req is actually came from hdfc server , use webhook secret here
+
     const paymentInformation: {
         token: string;
         userId: string;
@@ -29,9 +31,13 @@ app.post('/hdfcWebhook' , async (req: Request , res: Response)=>{
                 await txn.balance.create({
                     data : {
                         userId: Number(paymentInformation.userId),
-                        amount: Number(paymentInformation.amount),
+                        amount: Number(paymentInformation.amount)*100,
                         locked : 0
                     }
+                })
+
+                return res.status(200).json({
+                    message : `Captured`
                 })
             }
 
@@ -41,7 +47,7 @@ app.post('/hdfcWebhook' , async (req: Request , res: Response)=>{
                 },
                 data : {
                     amount : {
-                        increment : Number(paymentInformation.amount)
+                        increment : Number(paymentInformation.amount)*100
                     }
                 }
             })
@@ -102,4 +108,3 @@ app.post('/hdfcWebhook' , async (req: Request , res: Response)=>{
 app.listen(PORT , ()=>{
     console.log(`webhook server is running on port ${PORT}`);
 });
-
