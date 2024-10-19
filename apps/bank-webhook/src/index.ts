@@ -19,7 +19,7 @@ app.post('/hdfcWebhook' , async (req: Request , res: Response)=>{
     };
     // Update balance in db, add txn
     try {
-        const result = client.$transaction(async(txn)=>{
+        const result = await client.$transaction(async(txn)=>{
 
             const existingBalanceEntryInDb = await txn.balance.findUnique({
                 where: {
